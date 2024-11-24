@@ -1,18 +1,19 @@
 from abc import ABC, abstractmethod
 
+
 class Validator(ABC):
-    def __set_name__(self, owner, name):
+    def __set_name__(self, owner: type, name: str) -> None:
         self.protected_name = "_" + name
 
-    def __get__(self, instance, owner) -> int | str:
+    def __get__(self, instance: object, owner: type) -> int | str:
         return getattr(instance, self.protected_name)
 
-    def __set__(self, instance, value) -> None:
+    def __set__(self, instance: object, value: str | int) -> None:
         if self.validate(value):
             setattr(instance, self.protected_name, value)
 
     @abstractmethod
-    def validate(self, value: int):
+    def validate(self, value: int) -> None:
         pass
 
 
@@ -25,8 +26,9 @@ class Number(Validator):
         if isinstance(value, int):
             if (self.min_value <= value <= self.max_value):
                 return True
-            raise ValueError(f"Quantity should not be less than"
-                             f" {self.min_value} and greater than {self.max_value}.")
+            raise (
+                ValueError(f"Quantity should not be less than {self.min_value}"
+                           f" and greater than {self.max_value}."))
         raise TypeError("Quantity should be integer.")
 
 
